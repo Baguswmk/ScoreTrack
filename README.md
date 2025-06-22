@@ -81,7 +81,7 @@ Dengan struktur ini:
 ### Clone Repository
 ```bash
 git clone https://github.com/Baguswmk/ScoreTrack.git
-cd scoretrack-app
+cd ScoreTrack
 ```
 
 ### Backend Setup
