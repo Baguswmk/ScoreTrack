@@ -5,7 +5,6 @@ const seed = async () => {
   try {
     await db.sequelize.sync({ force: true });
 
-    // 1. Tambahkan Users (dengan role)
     const hashedPassword = await bcrypt.hash("password123", 10);
     const users = await db.User.bulkCreate(
       [
@@ -61,7 +60,6 @@ const seed = async () => {
       { returning: true }
     );
 
-    // Ambil user tertentu dari hasil bulkCreate
     const adminUser = users[0];
     const mentorUser = users[1];
     const mahendraUser = users[2];
@@ -71,13 +69,11 @@ const seed = async () => {
     const citraUser = users[6];
     const deniUser = users[7];
 
-    // 2. Course Categories
     const categories = await db.CourseCategory.bulkCreate([
       { name: "Programming" },
       { name: "Database" },
     ]);
 
-    // 3. Mentors
 
     const mentors = await db.Mentor.bulkCreate(
       [
@@ -88,7 +84,6 @@ const seed = async () => {
       { returning: true }
     );
 
-    // 4. Students
     const students = await db.Student.bulkCreate(
       [
         { name: "Andi", userId: studentUser.id },
@@ -99,7 +94,6 @@ const seed = async () => {
       { returning: true }
     );
 
-    // 5. Semesters
     const semesters = await db.Semester.bulkCreate([
       {
         name: "Ganjil 2023",
@@ -108,7 +102,6 @@ const seed = async () => {
       },
     ]);
 
-    // 6. Courses
     const courses = await db.Course.bulkCreate([
       {
         name: "Vue.js",
@@ -127,7 +120,6 @@ const seed = async () => {
       },
     ]);
 
-    // 7. Grades
     await db.Grade.bulkCreate([
       {
         studentId: students[0].id,

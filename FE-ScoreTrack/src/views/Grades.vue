@@ -1,9 +1,7 @@
 <template>
   <div class="p-6">
-
     <div v-if="gradeStore.isLoading">Loading...</div>
     <div v-if="gradeStore.error" class="text-red-500">{{ gradeStore.error }}</div>
-
     <GradeTable :grades="gradeStore.grades" />
   </div>
 </template>

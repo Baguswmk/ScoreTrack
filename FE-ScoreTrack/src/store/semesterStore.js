@@ -1,6 +1,5 @@
-// src/store/semesterStore.js
 import { defineStore } from 'pinia';
-import api from '../services/api'; // pastikan kamu punya axios instance di sini
+import api from '../services/api';
 
 export const useSemesterStore = defineStore('semester', {
   state: () => ({

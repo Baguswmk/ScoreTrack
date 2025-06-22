@@ -1,5 +1,3 @@
-
-
 <template>
     <div class="min-h-screen flex items-center justify-center px-4">
         <div :class="[
@@ -91,17 +89,13 @@ const router = useRouter();
 
 
 const login = async () => {
-  try {
-    await auth.login(email.value, password.value);
-    toast.success("Login berhasil!", {
-      theme: isDarkMode.value ? 'dark' : 'light',
-    });
-    router.push('/dashboard');
-  } catch (err) {
-    toast.error("Login gagal. Periksa kembali.", {
-      theme: isDarkMode.value ? 'dark' : 'light',
-    });
-  }
+    try {
+        await auth.login(email.value, password.value);
+        toast.success("Login berhasil!");
+        router.push('/dashboard');
+    } catch (err) {
+        toast.error("Login gagal. Periksa kembali.");
+    }
 };
 
 

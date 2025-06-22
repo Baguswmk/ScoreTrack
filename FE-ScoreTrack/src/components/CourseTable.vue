@@ -3,11 +3,9 @@
     <!-- Header -->
     <div class="flex justify-between items-center">
       <h2 class="text-2xl font-bold">Courses</h2>
-      <button @click="openAddModal"
-        class="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center space-x-2">
+      <button @click="openAddModal" class="bg-blue-600 text-white px-4 py-2 rounded-md flex items-center space-x-2">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
         </svg>
         <span>Add Course</span>
       </button>
@@ -15,14 +13,10 @@
 
     <!-- Category Filters -->
     <div class="flex space-x-4 mb-6">
-      <button
-        v-for="cat in categories"
-        :key="cat"
-        @click="selectedCategory = cat"
-        :class="[
-          'px-4 py-2 rounded-md cursor-pointer whitespace-nowrap',
-          selectedCategory === cat ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 shadow'
-        ]">
+      <button v-for="cat in categories" :key="cat" @click="selectedCategory = cat" :class="[
+        'px-4 py-2 rounded-md cursor-pointer whitespace-nowrap',
+        selectedCategory === cat ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 shadow'
+      ]">
         {{ cat }}
       </button>
     </div>
@@ -67,7 +61,8 @@
     </div>
 
     <!-- Modal Add/Edit Course -->
-    <div v-if="showModal" :style="{ backgroundColor: 'rgba(75, 85, 99, 0.75)' }" class="fixed inset-0  flex items-center justify-center z-50">
+    <div v-if="showModal" :style="{ backgroundColor: 'rgba(75, 85, 99, 0.75)' }"
+      class="fixed inset-0  flex items-center justify-center z-50">
       <div class="bg-white text-gray-700  p-6 rounded-lg shadow-lg w-[400px]">
         <h2 class="text-xl font-bold mb-4">{{ form.id ? 'Edit' : 'Add' }} Course</h2>
         <form @submit.prevent="saveCourse" class="space-y-3">
@@ -105,7 +100,8 @@
     </div>
 
     <!-- Delete Confirmation Modal -->
-    <div v-if="showDeleteModal" :style="{ backgroundColor: 'rgba(75, 85, 99, 0.75)' }" class="fixed inset-0 flex items-center justify-center z-50">
+    <div v-if="showDeleteModal" :style="{ backgroundColor: 'rgba(75, 85, 99, 0.75)' }"
+      class="fixed inset-0 flex items-center justify-center z-50">
       <div class="bg-white p-6 rounded-lg shadow-lg text-center w-[400px]">
         <h2 class="text-lg font-bold text-red-600">Delete Course</h2>
         <p class="text-gray-700 mt-2">Are you sure you want to delete <strong>{{ selectedCourse?.name }}</strong>?</p>
@@ -117,12 +113,12 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useCourseStore } from '../store/courseStore';
 import { useCategoryStore } from '../store/courseCategoryStore';
 import { useMentorStore } from '../store/mentorStore';
+import { toast } from 'vue3-toastify';
 
 const store = useCourseStore();
 const categoryStore = useCategoryStore();
@@ -132,6 +128,7 @@ const showModal = ref(false);
 const showDeleteModal = ref(false);
 const selectedCourse = ref(null);
 const selectedCategory = ref('All');
+const loading = ref(false);
 
 const form = ref({
   id: null,
@@ -140,16 +137,14 @@ const form = ref({
   mentorId: '',
 });
 
-const categories = computed(() => {
-  return ['All', ...categoryStore.categories.map(cat => cat.name)];
-});
+const categories = computed(() => ['All', ...categoryStore.categories.map(cat => cat.name)]);
 
 const filteredCourses = computed(() => {
   if (selectedCategory.value === 'All') return store.courses;
   return store.courses.filter(c => c.CourseCategory?.name === selectedCategory.value);
 });
 
-const openAddModal = () => {
+function openAddModal() {
   form.value = {
     id: null,
     name: '',
@@ -157,9 +152,9 @@ const openAddModal = () => {
     mentorId: '',
   };
   showModal.value = true;
-};
+}
 
-const editCourse = (course) => {
+function editCourse(course) {
   form.value = {
     id: course.id,
     name: course.name,
@@ -167,31 +162,50 @@ const editCourse = (course) => {
     mentorId: course.mentorId || course.Mentor?.id || '',
   };
   showModal.value = true;
-};
+}
 
-const openDeleteModal = (course) => {
+function openDeleteModal(course) {
   selectedCourse.value = course;
   showDeleteModal.value = true;
-};
+}
 
-const confirmDeleteCourse = async () => {
-  if (selectedCourse.value) {
+async function confirmDeleteCourse() {
+  if (!selectedCourse.value) return;
+
+  loading.value = true;
+  try {
     await store.deleteCourse(selectedCourse.value.id);
     await store.fetchCourses();
-    showDeleteModal.value = false;
+    toast.success("Course deleted.");
     selectedCourse.value = null;
+    showDeleteModal.value = false;
+  } catch (err) {
+    toast.error("Failed to delete course.");
+  } finally {
+    loading.value = false;
   }
-};
+}
 
-const saveCourse = async () => {
-  if (form.value.id) {
-    await store.updateCourse(form.value.id, form.value);
-  } else {
-    await store.addCourse(form.value);
+async function saveCourse() {
+  loading.value = true;
+  try {
+    if (form.value.id) {
+      await store.updateCourse(form.value.id, form.value);
+      toast.success("Course updated!");
+    } else {
+      await store.addCourse(form.value);
+      toast.success("Course added!");
+    }
+    await store.fetchCourses();
+    showModal.value = false;
+  } catch (err) {
+    toast.error("Failed to save course.");
+  } finally {
+    loading.value = false;
   }
-  showModal.value = false;
-};
+}
 
+// Lifecycle
 onMounted(async () => {
   await store.fetchCourses();
   await categoryStore.fetchCategories();

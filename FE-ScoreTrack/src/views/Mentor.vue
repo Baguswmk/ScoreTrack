@@ -1,9 +1,7 @@
 <template>
   <div class="p-6">
-
     <div v-if="mentorStore.isLoading">Loading...</div>
     <div v-if="mentorStore.error" class="text-red-500">{{ mentorStore.error }}</div>
-
     <MentorTable :students="mentorStore.students" />
   </div>
 </template>

@@ -1,4 +1,3 @@
-// src/store/gradeStore.js
 import { defineStore } from 'pinia';
 import api from '../services/api';
 

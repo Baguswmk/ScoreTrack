@@ -1,14 +1,11 @@
 <template>
   <div class="space-y-6">
-    <!-- Header -->
     <div class="flex justify-between items-center">
       <div>
         <h2 class="text-2xl font-bold">My Grades</h2>
         <p class="text-gray-500 mt-1">Here are your course grades across semesters.</p>
       </div>
     </div>
-
-    <!-- Tabel Grades -->
     <div class="bg-white rounded-lg shadow overflow-hidden">
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
