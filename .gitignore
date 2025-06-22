@@ -1,0 +1,44 @@
+# ==========================
+# Global Ignored Files
+# ==========================
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.pid
+*.seed
+.cache/
+
+# ==========================
+# Backend (Node.js + Express + Sequelize)
+# ==========================
+BE-ScoreTrack/node_modules/
+BE-ScoreTrack/dist/
+BE-ScoreTrack/.env
+BE-ScoreTrack/.env.local
+BE-ScoreTrack/.env.*.local
+BE-ScoreTrack/logs/
+BE-ScoreTrack/coverage/
+BE-ScoreTrack/.nyc_output/
+
+# Optional: Sequelize DB Dump or SQLite files
+BE-ScoreTrack/*.sqlite
+BE-ScoreTrack/*.sqlite3
+BE-ScoreTrack/*.db
+BE-ScoreTrack/dump.sql
+
+# ==========================
+# Frontend (Vue + Vite)
+# ==========================
+FE-ScoreTrack/node_modules/
+FE-ScoreTrack/dist/
+FE-ScoreTrack/.env
+FE-ScoreTrack/.env.local
+FE-ScoreTrack/.env.*.local
+FE-ScoreTrack/.DS_Store
+
+# ==========================
+# IDE Settings
+# ==========================
+.vscode/
+.idea/
